@@ -444,7 +444,7 @@ private:
 
         VkPhysicalDeviceFeatures deviceFeatures{};
         deviceFeatures.samplerAnisotropy = VK_TRUE;
-        deviceFeatures.sampleRateShading = VK_TRUE; // enable sample feature for the device
+        //deviceFeatures.sampleRateShading = VK_TRUE; // enable sample feature for the device
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -707,9 +707,9 @@ private:
         // MSAA
         VkPipelineMultisampleStateCreateInfo multisampling{};
         multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+        multisampling.sampleShadingEnable = VK_FALSE;
         multisampling.rasterizationSamples = msaaSamples;
-        multisampling.sampleShadingEnable = VK_TRUE;
-        multisampling.minSampleShading = 2.0f;  // min fraction for sample shading; closer to one is smoother
+        multisampling.minSampleShading = 1.0f;
         multisampling.pSampleMask = nullptr;
         multisampling.alphaToCoverageEnable = VK_FALSE;
         multisampling.alphaToOneEnable = VK_FALSE;
