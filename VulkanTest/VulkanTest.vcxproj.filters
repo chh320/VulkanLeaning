@@ -16,9 +16,153 @@
     <Filter Include="源文件\shader">
       <UniqueIdentifier>{741aef19-ff71-4b15-a2be-557a97a8888c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Imgui">
+      <UniqueIdentifier>{eac91233-e79b-4933-941f-fc7ba8a2a706}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Vulkan">
+      <UniqueIdentifier>{705c1130-d298-4cae-896c-32a7f501be05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Utilities">
+      <UniqueIdentifier>{a298f224-efb0-43bb-a147-bb3b663f18fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Assets">
+      <UniqueIdentifier>{be449672-43d0-4f44-98d8-9189e59e80e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="..\3rdParty\include\imgui\imgui.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\include\imgui\imgui_demo.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\include\imgui\imgui_draw.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\include\imgui\imgui_impl_glfw.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\include\imgui\imgui_impl_vulkan.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\include\imgui\imgui_tables.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\include\imgui\imgui_widgets.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\FrameBuffer.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Vulkan.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\DebugUtils.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Device.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Instance.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Window.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utilities\StbImage.cpp">
+      <Filter>源文件\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Surface.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\DepthBuffer.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\CommandPool.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\DeviceMemory.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Image.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Buffer.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\CommandBuffers.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\ImageView.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\RenderPass.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\SwapChain.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Application.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\DebugUtilsMessenger.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utilities\Console.cpp">
+      <Filter>源文件\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Fence.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\GraphicsPipeline.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\DescriptorSetManager.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\DescriptorPool.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\DescriptorSetLayout.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\DescriptorSets.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\PipelineLayout.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\ShaderModule.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Assets\Scene.cpp">
+      <Filter>源文件\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Sampler.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Assets\Model.cpp">
+      <Filter>源文件\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Assets\Texture.cpp">
+      <Filter>源文件\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Assets\TextureImage.cpp">
+      <Filter>源文件\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Assets\UniformBuffer.cpp">
+      <Filter>源文件\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Semophore.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vulkan\Strings.cpp">
+      <Filter>源文件\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,5 +173,169 @@
     <None Include="shaders\shader.frag">
       <Filter>源文件\shader</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\3rdParty\include\imgui\imgui.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\include\imgui\imgui_impl_glfw.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\include\imgui\imgui_impl_vulkan.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\include\imgui\imgui_internal.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\include\imgui\imstb_rectpack.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\include\imgui\imstb_textedit.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\include\imgui\imstb_truetype.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\include\imgui\imconfig.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Application.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\DebugUtils.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\FrameBuffer.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Vulkan.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Device.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Enumerate.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Instance.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Version.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Window.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\WindowConfig.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utilities\StbImage.h">
+      <Filter>源文件\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Surface.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\DepthBuffer.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\CommandPool.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\DeviceMemory.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Image.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Buffer.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\SingleTimeCommands.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\CommandBuffers.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\ImageView.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\RenderPass.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\SwapChain.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\DebugUtilsMessenger.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utilities\Console.h">
+      <Filter>源文件\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Fence.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\GraphicsPipeline.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\DescriptorBinding.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\DescriptorSetManager.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\DescriptorPool.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\DescriptorSetLayout.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\DescriptorSets.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\PipelineLayout.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\ShaderModule.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assets\Scene.h">
+      <Filter>源文件\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Sampler.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\BufferUtil.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assets\Model.h">
+      <Filter>源文件\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assets\Vertex.h">
+      <Filter>源文件\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assets\Texture.h">
+      <Filter>源文件\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assets\TextureImage.h">
+      <Filter>源文件\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assets\UniformBuffer.h">
+      <Filter>源文件\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Semaphore.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\Strings.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utilities\Glm.h">
+      <Filter>源文件\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vulkan\ImageMemoryBarrier.h">
+      <Filter>源文件\Vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

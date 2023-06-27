@@ -1,4 +1,4 @@
-#define NOMINMAX
+﻿#define NOMINMAX
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -14,6 +14,14 @@
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
+
+//#include <imgui/imgui.h>
+//#include <imgui/imgui_impl_glfw.h>
+//#include <imgui/imgui_impl_vulkan.h>
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
+#pragma comment(lib, "legacy_stdio_definitions")
+#endif
 
 #include <chrono>
 #include <iostream>
@@ -129,8 +137,8 @@ struct Vertex {
 namespace std {
     template<> struct hash<Vertex> {
         size_t operator()(Vertex const& vertex) const {
-            return ((hash <glm::vec3>()(vertex.pos) ^ 
-                (hash<glm::vec3>()(vertex.color) << 1)) >> 1)^
+            return ((hash <glm::vec3>()(vertex.pos) ^
+                (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^
                 (hash<glm::vec2>()(vertex.texCoord) << 1);
         }
     };
@@ -235,6 +243,9 @@ private:
 
     VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
 
+    //VkDescriptorPool m_imgui_descriptorPool;
+    //int m_imgui_MinImageCount = 2;
+
     void initWindow() {
         glfwInit();
 
@@ -272,6 +283,9 @@ private:
         createDescriptorSets();
         createCommandBuffers();
         createSyncObjects();
+
+        //_createImguiDescriptorPool();
+        //_setUpDearImGuiContext();
     }
 
     void mainLoop() {
@@ -603,7 +617,7 @@ private:
         renderPassInfo.dependencyCount = 1;
         renderPassInfo.pDependencies = &dependency;
 
-        if(vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS){
+        if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
             throw std::runtime_error("failed to create render pass!");
         }
     }
@@ -892,7 +906,7 @@ private:
         endSingleTimeCommands(commandBuffer);
     }
 
-    void createImage(uint32_t width, uint32_t height, uint32_t mipLevels,VkSampleCountFlagBits numSamples,  VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
+    void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
         VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory) {
         VkImageCreateInfo imageInfo{};
         imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -961,11 +975,11 @@ private:
         if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
             barrier.srcAccessMask = 0;
             barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-            
+
             sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
             destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
         }
-        else if(oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL){
+        else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
             barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
             barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
@@ -1017,7 +1031,7 @@ private:
     }
 
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
-        for (VkFormat format: candidates) {
+        for (VkFormat format : candidates) {
             VkFormatProperties props;
             vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &props);
             if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features) {
@@ -1057,19 +1071,19 @@ private:
         createImage(swapChainExtent.width, swapChainExtent.height, 1, msaaSamples, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
         depthImageView = createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
-        
+
         transitionImageLayout(depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
 
     }
 
-    void generateMipmaps(VkImage image, VkFormat imageFormat,int32_t texWidth, int32_t texHeight, uint32_t mipLevels) {
+    void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels) {
         VkFormatProperties formatProperties;
         vkGetPhysicalDeviceFormatProperties(physicalDevice, imageFormat, &formatProperties);
 
         if (!(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)) {
             throw std::runtime_error("texture image format does not support linear blitting!");
         }
-        
+
         VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
         VkImageMemoryBarrier barrier{};
@@ -1092,7 +1106,7 @@ private:
             barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
             barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 
-            vkCmdPipelineBarrier(commandBuffer, 
+            vkCmdPipelineBarrier(commandBuffer,
                 VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
                 0,
                 0, nullptr,
@@ -1171,15 +1185,16 @@ private:
 
         stbi_image_free(pixels);
 
-        mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+        //mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+        mipLevels = 1;
 
-        createImage(texWidth, texHeight, mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, 
+        createImage(texWidth, texHeight, mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
             VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
 
         transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
         copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-        //transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, mipLevels);
-        generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels);
+        transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, mipLevels);
+        //generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels);
 
         vkDestroyBuffer(device, stagingBuffer, nullptr);
         vkFreeMemory(device, stagingBufferMemory, nullptr);
@@ -1250,7 +1265,7 @@ private:
         for (const auto& shape : shapes) {
             for (const auto& index : shape.mesh.indices) {
                 Vertex vertex{};
-                
+
                 vertex.pos = {
                     attrib.vertices[3 * index.vertex_index + 0],
                     attrib.vertices[3 * index.vertex_index + 1],
@@ -1286,13 +1301,13 @@ private:
         vkUnmapMemory(device, stagingBufferMemory);
 
         createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
-    
+
         copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
 
         vkDestroyBuffer(device, stagingBuffer, nullptr);
         vkFreeMemory(device, stagingBufferMemory, nullptr);
     }
-    
+
     void createIndexBuffer() {
         VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 
@@ -1398,7 +1413,7 @@ private:
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.commandPool = commandPool;
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        allocInfo.commandBufferCount = (uint32_t) commandBuffers.size();
+        allocInfo.commandBufferCount = (uint32_t)commandBuffers.size();
 
         if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate command buffers!");
@@ -1423,7 +1438,7 @@ private:
                 vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
                 throw std::runtime_error("failed to create semaphores!");
             }
-        }     
+        }
     }
 
     void cleanupSwapChain() {
@@ -1460,7 +1475,7 @@ private:
 
         createSwapChain();
         createImageViews();
-        createDepthResources();
+        createColorResources();
         createDepthResources();
         createFramebuffers();
     }
@@ -1538,7 +1553,7 @@ private:
 
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-        
+
         UniformBufferObject ubo{};
         ubo.model = glm::mat4(1.0f);
         //ubo.view = glm::mat4(1.0f);
@@ -1555,7 +1570,7 @@ private:
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
         for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
-            if (typeFilter & (1 << i) &&  (memProperties.memoryTypes[i].propertyFlags & properties) == properties) {
+            if (typeFilter & (1 << i) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties) {
                 return i;
             }
         }
@@ -1579,7 +1594,7 @@ private:
         renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
         renderPassInfo.renderArea.offset = { 0, 0 };
         renderPassInfo.renderArea.extent = swapChainExtent;
-        
+
         std::array<VkClearValue, 2> clearValues = { };
         clearValues[0].color = { {0.0f, 0.0f, 0.0f, 1.0f} };
         clearValues[1].depthStencil = { 1.0f, 0 };
@@ -1614,6 +1629,21 @@ private:
 
         //vkCmdDraw(commandBuffer, static_cast<uint32_t>(vertices.size()), 1, 0, 0);
         vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+
+        //ImGui_ImplVulkan_NewFrame();
+        //ImGui_ImplGlfw_NewFrame();
+        //ImGui::NewFrame();
+
+        //{
+        //    ImGui::Begin("Hello, world!");                          
+        //    ImGui::End();
+        //}
+
+        //ImGui::Render();
+        //ImDrawData* draw_data = ImGui::GetDrawData();
+
+        ////ctx.fp_vkCmdNextSubpass(cmd_buffer, VK_SUBPASS_CONTENTS_INLINE);
+        //ImGui_ImplVulkan_RenderDrawData(draw_data, commandBuffer);
 
         vkCmdEndRenderPass(commandBuffer);
         if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
@@ -1833,12 +1863,90 @@ private:
         if (counts & VK_SAMPLE_COUNT_64_BIT) { return VK_SAMPLE_COUNT_64_BIT; }
         if (counts & VK_SAMPLE_COUNT_32_BIT) { return VK_SAMPLE_COUNT_32_BIT; }
         if (counts & VK_SAMPLE_COUNT_16_BIT) { return VK_SAMPLE_COUNT_16_BIT; }
-        if (counts & VK_SAMPLE_COUNT_8_BIT)  { return VK_SAMPLE_COUNT_8_BIT; }
-        if (counts & VK_SAMPLE_COUNT_4_BIT)  { return VK_SAMPLE_COUNT_4_BIT; }
-        if (counts & VK_SAMPLE_COUNT_2_BIT)  { return VK_SAMPLE_COUNT_2_BIT; }
+        if (counts & VK_SAMPLE_COUNT_8_BIT) { return VK_SAMPLE_COUNT_8_BIT; }
+        if (counts & VK_SAMPLE_COUNT_4_BIT) { return VK_SAMPLE_COUNT_4_BIT; }
+        if (counts & VK_SAMPLE_COUNT_2_BIT) { return VK_SAMPLE_COUNT_2_BIT; }
 
         return VK_SAMPLE_COUNT_1_BIT;
     }
+
+    static void check_vk_result(VkResult err)
+    {
+        if (err == 0)
+            return;
+        fprintf(stderr, "[vulkan] Error: VkResult = %d\n", err);
+        if (err < 0)
+            abort();
+    }
+
+    //void _createImguiDescriptorPool() {
+    //    VkDescriptorPoolSize pool_sizes[] =
+    //    {
+    //        { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
+    //        { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
+    //        { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
+    //        { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
+    //        { VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
+    //        { VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
+    //        { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
+    //        { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
+    //        { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
+    //        { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
+    //        { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
+    //    };
+    //    VkDescriptorPoolCreateInfo pool_info = {};
+    //    pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    //    pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+    //    pool_info.maxSets = 1000 * IM_ARRAYSIZE(pool_sizes);
+    //    pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
+    //    pool_info.pPoolSizes = pool_sizes;
+    //    VkResult err = vkCreateDescriptorPool(device, &pool_info, nullptr, &m_imgui_descriptorPool);
+    //    check_vk_result(err);
+    //}
+
+    //void _setUpDearImGuiContext() {
+
+    //    //1> Config
+    //    IMGUI_CHECKVERSION();
+    //    ImGui::CreateContext();
+    //    ImGuiIO& io = ImGui::GetIO();	(void)io;
+
+    //    //2> Setup Dear Imgui style
+    //    ImGui::StyleColorsDark();
+
+    //    //3> Init Vulkan
+    //    ImGui_ImplGlfw_InitForVulkan(window, true);
+
+    //    QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+
+    //    ImGui_ImplVulkan_InitInfo init_info = {};
+    //    init_info.Instance = instance;
+    //    init_info.PhysicalDevice = physicalDevice;
+    //    init_info.Device = device;
+    //    init_info.QueueFamily = indices.graphicsFamily.value();
+    //    init_info.Queue = graphicsQueue;
+    //    init_info.DescriptorPool = m_imgui_descriptorPool;
+    //    init_info.Subpass = 0;
+    //    init_info.MinImageCount = m_imgui_MinImageCount;
+    //    init_info.ImageCount = swapChainImages.size();
+    //    init_info.MSAASamples = msaaSamples;
+    //    init_info.Allocator = nullptr;
+    //    init_info.CheckVkResultFn = check_vk_result;
+    //    ImGui_ImplVulkan_Init(&init_info, renderPass);
+
+    //    // Upload Fonts
+    //    {
+    //        // begin command buffer
+    //        VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+
+    //        ImGui_ImplVulkan_CreateFontsTexture(commandBuffer);
+
+    //        // end command buffer
+    //        endSingleTimeCommands(commandBuffer);
+
+    //        ImGui_ImplVulkan_DestroyFontUploadObjects();
+    //    }
+    //}
 };
 
 int main() {
